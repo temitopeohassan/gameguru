@@ -19,12 +19,16 @@ export const env = createEnv({
     NEXT_PUBLIC_FARCASTER_PAYLOAD: z.string().min(1),
     NEXT_PUBLIC_FARCASTER_SIGNATURE: z.string().min(1),
   },
-  // For Next.js >= 13.4.4, you only need to destructure client variables:
-  experimental__runtimeEnv: {
+  runtimeEnv: {
+    NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
+    JWT_SECRET: process.env.JWT_SECRET,
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_TOKEN: process.env.REDIS_TOKEN,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
     NEXT_PUBLIC_FARCASTER_HEADER: process.env.NEXT_PUBLIC_FARCASTER_HEADER,
     NEXT_PUBLIC_FARCASTER_PAYLOAD: process.env.NEXT_PUBLIC_FARCASTER_PAYLOAD,
     NEXT_PUBLIC_FARCASTER_SIGNATURE: process.env.NEXT_PUBLIC_FARCASTER_SIGNATURE,
   },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

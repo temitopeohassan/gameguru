@@ -123,7 +123,15 @@ export function Football() {
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions.length > 0 ? questions[currentQuestionIndex % questions.length] : null;
+
+  if (!currentQuestion) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-lg text-gray-600">No questions available.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
