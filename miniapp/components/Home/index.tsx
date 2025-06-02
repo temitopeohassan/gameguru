@@ -4,6 +4,8 @@ import { useSignIn } from "@/hooks/use-sign-in";
 import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import { HomeComponent } from "@/app/components/HomeComponent";
+
 
 export default function Home() {
   const { signIn, isLoading, isSignedIn, user } = useSignIn({
@@ -35,61 +37,17 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-white text-black flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Welcome</h1>
-        <p className="text-lg text-muted-foreground">
-          {isSignedIn ? "You are signed in!" : "Sign in to get started"}
-        </p>
-        <p className="text-lg text-muted-foreground">
-          {address
-            ? `${address.substring(0, 6)}...${address.substring(
-                address.length - 4
-              )}`
-            : "No address found"}
-        </p>
+    <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
+      <div className="w-full max-w-md mx-auto px-4 py-3">
+        
 
-        {!isSignedIn ? (
-          <button
-            onClick={signIn}
-            disabled={isLoading}
-            className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-          >
-            {isLoading ? "Signing in..." : "Sign in"}
-          </button>
-        ) : (
-          <div className="space-y-4">
-            {user && (
-              <div className="flex flex-col items-center space-y-2">
-                <Image
-                  src={user.pfp_url}
-                  alt="Profile"
-                  className="w-20 h-20 rounded-full"
-                  width={80}
-                  height={80}
-                />
-                <div className="text-center">
-                  <p className="font-semibold">{user.display_name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    @{user.username}
-                  </p>
-                </div>
-              </div>
-            )}
-            <button
-              onClick={testAuth}
-              className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors duration-200"
-            >
-              Test Authentication
-            </button>
+        <main className="flex-1">
+          <HomeComponent />
+        </main>
 
-            {testResult && (
-              <div className="mt-4 p-4 rounded-lg bg-gray-100 text-black text-sm">
-                {testResult}
-              </div>
-            )}
-          </div>
-        )}
+        <footer className="mt-2 pt-4 flex justify-center">
+          Game Guru
+        </footer>
       </div>
     </div>
   );

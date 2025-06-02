@@ -1,18 +1,12 @@
-// index.js
-
 const express = require('express');
 const cors = require('cors');
-const { initializeApp, applicationDefault } = require('firebase-admin/app');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
-
-// Initialize Firebase Admin SDK
-initializeApp({
-  credential: applicationDefault(),
-});
 
 const app = express();
 
-// Configure CORS with specific options
+// Configure CORS
 app.use(cors({
   origin: [
     'http://localhost:3000',
@@ -29,11 +23,37 @@ app.use(cors({
   maxAge: 86400
 }));
 
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json());
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome to the AirtimePlus Backend API Server</h1>');
+  res.send('<h1>Welcome to the Game Guru Backend API Server</h1>');
+});
+
+// GET /football-questions?count=10
+app.get('/football-questions', (req, res) => {
+  const filePath = path.join(__dirname, 'soccer_questions.json');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading questions:', err);
+      return res.status(500).json({ error: 'Failed to load questions' });
+    }
+
+    try {
+      const questions = JSON.parse(data);
+      const count = parseInt(req.query.count) || 10;
+
+      // Shuffle and slice random questions
+      const shuffled = questions.sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, count);
+
+      res.json(selected);
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+      res.status(500).json({ error: 'Invalid questions format' });
+    }
+  });
 });
 
 // Start server

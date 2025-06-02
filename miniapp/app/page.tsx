@@ -11,26 +11,24 @@ const frame = {
     title: "Launch App",
     action: {
       type: "launch_frame",
-      name: "Mini-app Starter",
+      name: "Game Guru",
       url: appUrl,
       splashImageUrl: `${appUrl}/images/splash.png`,
-      splashBackgroundColor: "#ffffff",
+      splashBackgroundColor: "#CCCACD",
     },
   },
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Mini-app Starter",
-    openGraph: {
-      title: "Mini-app Starter",
-      description: "A starter for Farcastermini-apps",
-    },
-    other: {
-      "fc:frame": JSON.stringify(frame),
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Game Guru",
+  openGraph: {
+    title: "Game Guru",
+    description: "A sports trivia quiz game Farcaster mini-app",
+  },
+  other: {
+    "fc:frame": JSON.stringify(frame),
+  },
+};
 
 export default function Home() {
   return <App />;
