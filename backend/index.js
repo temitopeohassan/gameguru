@@ -10,11 +10,7 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:8080',
-    'https://airtimeplus-app.vercel.app',
-    'https://airtimeplus.xyz',
-    'https://airtimeplus-miniapp.vercel.app'
+    'https://gameguru-delta.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
