@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { HomeComponent } from "@/app/components/HomeComponent";
 
-
 export default function Home() {
   const { signIn, isLoading, isSignedIn, user } = useSignIn({
     autoSignIn: true,
@@ -38,9 +37,24 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
-      <div className="w-full max-w-md mx-auto px-4 py-3">
-        
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 bg-[var(--app-background)] border-b border-[var(--app-gray)] z-50">
+        <div className="w-full max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Image
+              src="/images/logo.png"
+              alt="Game Guru Logo"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
+            <h1 className="text-xl font-bold">Game Guru</h1>
+          </div>
+        </div>
+      </header>
 
+      {/* Add padding-top to account for fixed header */}
+      <div className="w-full max-w-md mx-auto px-4 py-3 mt-16">
         <main className="flex-1">
           <HomeComponent />
         </main>

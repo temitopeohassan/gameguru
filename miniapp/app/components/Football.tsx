@@ -15,7 +15,8 @@ type Question = {
 
 export function Football() {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [usedQuestionIds, setUsedQuestionIds] = useState<Set<number>>(new Set());
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -36,6 +37,12 @@ export function Football() {
       }
       const data = await response.json();
       setQuestions(data);
+      // Set the first random question
+      if (data.length > 0) {
+        const randomQuestion = data[Math.floor(Math.random() * data.length)];
+        setCurrentQuestion(randomQuestion);
+        setUsedQuestionIds(new Set([randomQuestion.id]));
+      }
     } catch (err) {
       setError('Failed to load questions. Please try again later.');
       console.error('Error fetching questions:', err);
@@ -44,15 +51,33 @@ export function Football() {
     }
   };
 
+  const getNextQuestion = () => {
+    if (questions.length === 0) return null;
+    
+    // If we've used all questions, reset and start over with random selection
+    if (usedQuestionIds.size >= questions.length) {
+      setUsedQuestionIds(new Set());
+    }
+    
+    // Get available questions (not used in current cycle)
+    const availableQuestions = questions.filter(q => !usedQuestionIds.has(q.id));
+    
+    // If no available questions, use all questions again
+    const questionPool = availableQuestions.length > 0 ? availableQuestions : questions;
+    
+    // Select random question from available pool
+    const randomIndex = Math.floor(Math.random() * questionPool.length);
+    return questionPool[randomIndex];
+  };
+
   const handleOptionSelect = (optionIndex: number) => {
     if (isAnswered) return;
     setSelectedOption(optionIndex);
   };
 
   const handleSubmit = () => {
-    if (selectedOption === null) return;
+    if (selectedOption === null || !currentQuestion) return;
 
-    const currentQuestion = questions[currentQuestionIndex];
     const correct = currentQuestion.options[selectedOption] === currentQuestion.answer;
     
     setIsAnswered(true);
@@ -66,19 +91,30 @@ export function Football() {
   };
 
   const handleNextQuestion = () => {
-    setCurrentQuestionIndex(prev => prev + 1);
+    const nextQuestion = getNextQuestion();
+    if (nextQuestion) {
+      setCurrentQuestion(nextQuestion);
+      setUsedQuestionIds(prev => new Set(Array.from(prev).concat(nextQuestion.id)));
+    }
     setSelectedOption(null);
     setIsAnswered(false);
     setIsCorrect(false);
   };
 
   const handleRestart = () => {
-    setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedOption(null);
     setIsAnswered(false);
     setIsCorrect(false);
     setGameOver(false);
+    setUsedQuestionIds(new Set());
+    
+    // Start with a new random question
+    if (questions.length > 0) {
+      const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+      setCurrentQuestion(randomQuestion);
+      setUsedQuestionIds(new Set([randomQuestion.id]));
+    }
   };
 
   if (isLoading) {
@@ -105,11 +141,16 @@ export function Football() {
             <Icon name="star" size="lg" className="text-yellow-500 mx-auto" />
             <h2 className="text-2xl font-bold">Your Score: {score}</h2>
             <p className="text-gray-600">
-              {score > 5 
-                ? "Great job! You're a football expert!" 
-                : score > 2 
-                  ? "Good effort! Keep learning!" 
-                  : "Keep practicing to improve your knowledge!"}
+              You answered {score} question{score !== 1 ? 's' : ''} correctly in a row!
+            </p>
+            <p className="text-gray-600">
+              {score > 10 
+                ? "Incredible! You're a true football expert!" 
+                : score > 5 
+                  ? "Great job! You know football well!" 
+                  : score > 2 
+                    ? "Good effort! Keep learning!" 
+                    : "Keep practicing to improve your knowledge!"}
             </p>
             <Button 
               onClick={handleRestart}
@@ -123,8 +164,6 @@ export function Football() {
     );
   }
 
-  const currentQuestion = questions.length > 0 ? questions[currentQuestionIndex % questions.length] : null;
-
   if (!currentQuestion) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -135,7 +174,7 @@ export function Football() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card title={`Question ${currentQuestionIndex + 1}`}>
+      <Card title={`Question ${score + 1} • Score: ${score}`}>
         <div className="space-y-6">
           <p className="text-lg font-medium">{currentQuestion.question}</p>
           
