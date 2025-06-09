@@ -2,1101 +2,349 @@
   {
     "id": 1,
     "question": "Who won the FIFA World Cup in 2018?",
-    "options": [
-      "Germany",
-      "Brazil",
-      "France",
-      "Croatia"
-    ],
+    "options": ["Germany", "Brazil", "France", "Croatia"],
     "answer": "France"
   },
   {
     "id": 2,
     "question": "Which player has won the most Ballon d'Or awards?",
-    "options": [
-      "Cristiano Ronaldo",
-      "Lionel Messi",
-      "Ronaldinho",
-      "Zinedine Zidane"
-    ],
+    "options": ["Cristiano Ronaldo", "Lionel Messi", "Ronaldinho", "Zinedine Zidane"],
     "answer": "Lionel Messi"
   },
   {
     "id": 3,
     "question": "Which country has won the most FIFA World Cup titles?",
-    "options": [
-      "Argentina",
-      "Germany",
-      "Italy",
-      "Brazil"
-    ],
+    "options": ["Argentina", "Germany", "Italy", "Brazil"],
     "answer": "Brazil"
   },
   {
     "id": 4,
     "question": "Which club has won the most UEFA Champions League titles?",
-    "options": [
-      "AC Milan",
-      "Liverpool",
-      "Barcelona",
-      "Real Madrid"
-    ],
+    "options": ["AC Milan", "Liverpool", "Barcelona", "Real Madrid"],
     "answer": "Real Madrid"
   },
   {
     "id": 5,
     "question": "Which player scored the 'Hand of God' goal?",
-    "options": [
-      "Diego Maradona",
-      "Pel\u00e9",
-      "George Best",
-      "Johan Cruyff"
-    ],
+    "options": ["Diego Maradona", "Pelé", "George Best", "Johan Cruyff"],
     "answer": "Diego Maradona"
   },
   {
     "id": 6,
-    "question": "Soccer sample question 6?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country has won the most Copa America titles?",
+    "options": ["Chile", "Brazil", "Uruguay", "Argentina"],
+    "answer": "Uruguay"
   },
   {
     "id": 7,
-    "question": "Soccer sample question 7?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most UEFA Nations League titles?",
+    "options": ["Portugal", "Spain", "France", "England"],
+    "answer": "Portugal"
   },
   {
     "id": 8,
-    "question": "Soccer sample question 8?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the Premier League's all-time top scorer?",
+    "options": ["Harry Kane", "Wayne Rooney", "Alan Shearer", "Thierry Henry"],
+    "answer": "Alan Shearer"
   },
   {
     "id": 9,
-    "question": "Soccer sample question 9?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country hosted the 2014 FIFA World Cup?",
+    "options": ["South Africa", "Brazil", "Germany", "Russia"],
+    "answer": "Brazil"
   },
   {
     "id": 10,
-    "question": "Soccer sample question 10?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which African nation was the first to reach the World Cup quarterfinals?",
+    "options": ["Senegal", "Nigeria", "Ghana", "Cameroon"],
+    "answer": "Cameroon"
   },
   {
     "id": 11,
-    "question": "Soccer sample question 11?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who won the Ballon d'Or in 2007?",
+    "options": ["Ronaldinho", "Kaká", "Cristiano Ronaldo", "Lionel Messi"],
+    "answer": "Kaká"
   },
   {
     "id": 12,
-    "question": "Soccer sample question 12?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club is nicknamed 'The Red Devils'?",
+    "options": ["Liverpool", "Manchester United", "Bayern Munich", "Arsenal"],
+    "answer": "Manchester United"
   },
   {
     "id": 13,
-    "question": "Soccer sample question 13?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which nation has won the most FIFA Women's World Cups?",
+    "options": ["Germany", "USA", "Sweden", "Brazil"],
+    "answer": "USA"
   },
   {
     "id": 14,
-    "question": "Soccer sample question 14?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who scored the 'Hand of God' goal?",
+    "options": ["Zinedine Zidane", "Pelé", "Lionel Messi", "Diego Maradona"],
+    "answer": "Diego Maradona"
   },
   {
     "id": 15,
-    "question": "Soccer sample question 15?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country won Euro 2016?",
+    "options": ["Portugal", "Spain", "France", "Germany"],
+    "answer": "Portugal"
   },
   {
     "id": 16,
-    "question": "Soccer sample question 16?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is known as 'The Pharaoh' in football?",
+    "options": ["Hakim Ziyech", "Mohamed Salah", "Sadio Mané", "Riyad Mahrez"],
+    "answer": "Mohamed Salah"
   },
   {
     "id": 17,
-    "question": "Soccer sample question 17?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which goalkeeper has the most clean sheets in Premier League history?",
+    "options": ["Petr Čech", "David de Gea", "Joe Hart", "Alisson Becker"],
+    "answer": "Petr Čech"
   },
   {
     "id": 18,
-    "question": "Soccer sample question 18?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player has scored the fastest hat-trick in Premier League history?",
+    "options": ["Cristiano Ronaldo", "Sadio Mané", "Michael Owen", "Harry Kane"],
+    "answer": "Sadio Mané"
   },
   {
     "id": 19,
-    "question": "Soccer sample question 19?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which nation won the first FIFA World Cup in 1930?",
+    "options": ["Uruguay", "Argentina", "Italy", "Brazil"],
+    "answer": "Uruguay"
   },
   {
     "id": 20,
-    "question": "Soccer sample question 20?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club plays its home games at Camp Nou?",
+    "options": ["Barcelona", "Atletico Madrid", "Valencia", "Real Madrid"],
+    "answer": "Barcelona"
   },
   {
     "id": 21,
-    "question": "Soccer sample question 21?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which Italian club has won the most Serie A titles?",
+    "options": ["Napoli", "AC Milan", "Inter Milan", "Juventus"],
+    "answer": "Juventus"
   },
   {
     "id": 22,
-    "question": "Soccer sample question 22?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player has won the most UEFA Champions League titles?",
+    "options": ["Xavi", "Cristiano Ronaldo", "Lionel Messi", "Paco Gento"],
+    "answer": "Paco Gento"
   },
   {
     "id": 23,
-    "question": "Soccer sample question 23?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country is famous for its 'Total Football' style?",
+    "options": ["France", "Germany", "Spain", "Netherlands"],
+    "answer": "Netherlands"
   },
   {
     "id": 24,
-    "question": "Soccer sample question 24?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the current manager of Manchester City (as of 2024)?",
+    "options": ["Mikel Arteta", "Pep Guardiola", "Jürgen Klopp", "Erik ten Hag"],
+    "answer": "Pep Guardiola"
   },
   {
     "id": 25,
-    "question": "Soccer sample question 25?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which footballer is known for the 'Zlatan Kick'?",
+    "options": ["Zlatan Ibrahimović", "Karim Benzema", "Robert Lewandowski", "Mario Balotelli"],
+    "answer": "Zlatan Ibrahimović"
   },
   {
     "id": 26,
-    "question": "Soccer sample question 26?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which English club has won the most top-flight titles?",
+    "options": ["Arsenal", "Liverpool", "Manchester United", "Chelsea"],
+    "answer": "Liverpool"
   },
   {
     "id": 27,
-    "question": "Soccer sample question 27?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who won the Golden Boot in the 2018 World Cup?",
+    "options": ["Harry Kane", "Kylian Mbappé", "Luka Modrić", "Antoine Griezmann"],
+    "answer": "Harry Kane"
   },
   {
     "id": 28,
-    "question": "Soccer sample question 28?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country is nicknamed 'The Azzurri'?",
+    "options": ["Italy", "Argentina", "France", "Spain"],
+    "answer": "Italy"
   },
   {
     "id": 29,
-    "question": "Soccer sample question 29?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "What is the name of Bayern Munich's home stadium?",
+    "options": ["San Siro", "Camp Nou", "Signal Iduna Park", "Allianz Arena"],
+    "answer": "Allianz Arena"
   },
   {
     "id": 30,
-    "question": "Soccer sample question 30?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'Captain America' in soccer?",
+    "options": ["Landon Donovan", "Clint Dempsey", "Weston McKennie", "Christian Pulisic"],
+    "answer": "Christian Pulisic"
   },
   {
     "id": 31,
-    "question": "Soccer sample question 31?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player famously missed a penalty in the 1994 World Cup Final?",
+    "options": ["Dunga", "Roberto Baggio", "Bebeto", "Romário"],
+    "answer": "Roberto Baggio"
   },
   {
     "id": 32,
-    "question": "Soccer sample question 32?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most UEFA Super Cup titles?",
+    "options": ["Real Madrid", "Barcelona", "Bayern Munich", "Manchester United"],
+    "answer": "Real Madrid"
   },
   {
     "id": 33,
-    "question": "Soccer sample question 33?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Little Magician'?",
+    "options": ["Zlatan Ibrahimović", "Karim Benzema", "Robert Lewandowski", "Mario Balotelli"],
+    "answer": "Zlatan Ibrahimović"
   },
   {
     "id": 34,
-    "question": "Soccer sample question 34?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most UEFA Europa League titles?",
+    "options": ["Real Madrid", "Barcelona", "Bayern Munich", "Manchester United"],
+    "answer": "Real Madrid"
   },
   {
     "id": 35,
-    "question": "Soccer sample question 35?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Iceman'?",
+    "options": ["Zlatan Ibrahimović", "Karim Benzema", "Robert Lewandowski", "Mario Balotelli"],
+    "answer": "Zlatan Ibrahimović"
   },
   {
     "id": 36,
-    "question": "Soccer sample question 36?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most UEFA Super Cup titles?",
+    "options": ["Real Madrid", "Barcelona", "Bayern Munich", "Manchester United"],
+    "answer": "Real Madrid"
   },
   {
     "id": 37,
-    "question": "Soccer sample question 37?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which Player is known as 'The King' in football?",
+    "options": ["Zlatan Ibrahimović", "Karim Benzema", "Robert Lewandowski", "Mario Balotelli"],
+    "answer": "Zlatan Ibrahimović"
   },
   {
     "id": 38,
-    "question": "Soccer sample question 38?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player holds the record for most goals in a single World Cup tournament?",
+    "options": ["Pelé", "Just Fontaine", "Gerd Müller", "Ronaldo"],
+    "answer": "Just Fontaine"
   },
   {
     "id": 39,
-    "question": "Soccer sample question 39?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country won the first European Championship (Euro) in 1960?",
+    "options": ["Spain", "Soviet Union", "Italy", "West Germany"],
+    "answer": "Soviet Union"
   },
   {
     "id": 40,
-    "question": "Soccer sample question 40?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Divine Ponytail'?",
+    "options": ["Roberto Baggio", "Alessandro Del Piero", "Francesco Totti", "Paolo Maldini"],
+    "answer": "Roberto Baggio"
   },
   {
     "id": 41,
-    "question": "Soccer sample question 41?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most consecutive Bundesliga titles?",
+    "options": ["Borussia Dortmund", "Bayern Munich", "Hamburg", "Werder Bremen"],
+    "answer": "Bayern Munich"
   },
   {
     "id": 42,
-    "question": "Soccer sample question 42?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the youngest player to ever score in a World Cup final?",
+    "options": ["Pelé", "Kylian Mbappé", "Mario Götze", "Marco Materazzi"],
+    "answer": "Pelé"
   },
   {
     "id": 43,
-    "question": "Soccer sample question 43?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country won the first FIFA Confederations Cup in 1992?",
+    "options": ["Brazil", "Argentina", "France", "Saudi Arabia"],
+    "answer": "Argentina"
   },
   {
     "id": 44,
-    "question": "Soccer sample question 44?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player holds the record for most assists in a single Premier League season?",
+    "options": ["Thierry Henry", "Kevin De Bruyne", "Mesut Özil", "Cesc Fàbregas"],
+    "answer": "Kevin De Bruyne"
   },
   {
     "id": 45,
-    "question": "Soccer sample question 45?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most FA Cup titles?",
+    "options": ["Manchester United", "Arsenal", "Liverpool", "Chelsea"],
+    "answer": "Arsenal"
   },
   {
     "id": 46,
-    "question": "Soccer sample question 46?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the only player to win the World Cup as both a player and a manager?",
+    "options": ["Franz Beckenbauer", "Mário Zagallo", "Didier Deschamps", "Zinedine Zidane"],
+    "answer": "Mário Zagallo"
   },
   {
     "id": 47,
-    "question": "Soccer sample question 47?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country has won the most Olympic gold medals in men's football?",
+    "options": ["Brazil", "Argentina", "Hungary", "Great Britain"],
+    "answer": "Hungary"
   },
   {
     "id": 48,
-    "question": "Soccer sample question 48?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Kaiser'?",
+    "options": ["Franz Beckenbauer", "Gerd Müller", "Lothar Matthäus", "Karl-Heinz Rummenigge"],
+    "answer": "Franz Beckenbauer"
   },
   {
     "id": 49,
-    "question": "Soccer sample question 49?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most Copa Libertadores titles?",
+    "options": ["Boca Juniors", "River Plate", "Independiente", "São Paulo"],
+    "answer": "Independiente"
   },
   {
     "id": 50,
-    "question": "Soccer sample question 50?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the only player to score in three different World Cup finals?",
+    "options": ["Pelé", "Ronaldo", "Miroslav Klose", "Gerd Müller"],
+    "answer": "Pelé"
   },
   {
     "id": 51,
-    "question": "Soccer sample question 51?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country won the first FIFA Club World Cup in 2000?",
+    "options": ["Real Madrid", "Manchester United", "Corinthians", "Vasco da Gama"],
+    "answer": "Corinthians"
   },
   {
     "id": 52,
-    "question": "Soccer sample question 52?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player holds the record for most goals in a single calendar year?",
+    "options": ["Lionel Messi", "Cristiano Ronaldo", "Gerd Müller", "Pelé"],
+    "answer": "Lionel Messi"
   },
   {
     "id": 53,
-    "question": "Soccer sample question 53?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most consecutive Serie A titles?",
+    "options": ["AC Milan", "Inter Milan", "Juventus", "Roma"],
+    "answer": "Juventus"
   },
   {
     "id": 54,
-    "question": "Soccer sample question 54?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Who is the only player to win the World Cup, European Championship, and Champions League in the same year?",
+    "options": ["Cristiano Ronaldo", "Lionel Messi", "Xavi", "Andrés Iniesta"],
+    "answer": "Andrés Iniesta"
   },
   {
     "id": 55,
-    "question": "Soccer sample question 55?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which country has won the most FIFA U-20 World Cup titles?",
+    "options": ["Brazil", "Argentina", "Spain", "Portugal"],
+    "answer": "Argentina"
   },
   {
     "id": 56,
-    "question": "Soccer sample question 56?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Professor'?",
+    "options": ["Xavi", "Andrea Pirlo", "Claude Makélélé", "Michael Carrick"],
+    "answer": "Andrea Pirlo"
   },
   {
     "id": 57,
-    "question": "Soccer sample question 57?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which club has won the most consecutive La Liga titles?",
+    "options": ["Barcelona", "Real Madrid", "Atlético Madrid", "Valencia"],
+    "answer": "Real Madrid"
   },
   {
     "id": 58,
-    "question": "Soccer sample question 58?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 59,
-    "question": "Soccer sample question 59?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 60,
-    "question": "Soccer sample question 60?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 61,
-    "question": "Soccer sample question 61?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 62,
-    "question": "Soccer sample question 62?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 63,
-    "question": "Soccer sample question 63?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 64,
-    "question": "Soccer sample question 64?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 65,
-    "question": "Soccer sample question 65?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 66,
-    "question": "Soccer sample question 66?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 67,
-    "question": "Soccer sample question 67?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 68,
-    "question": "Soccer sample question 68?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 69,
-    "question": "Soccer sample question 69?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 70,
-    "question": "Soccer sample question 70?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 71,
-    "question": "Soccer sample question 71?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 72,
-    "question": "Soccer sample question 72?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 73,
-    "question": "Soccer sample question 73?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 74,
-    "question": "Soccer sample question 74?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 75,
-    "question": "Soccer sample question 75?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 76,
-    "question": "Soccer sample question 76?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 77,
-    "question": "Soccer sample question 77?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 78,
-    "question": "Soccer sample question 78?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 79,
-    "question": "Soccer sample question 79?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 80,
-    "question": "Soccer sample question 80?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 81,
-    "question": "Soccer sample question 81?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 82,
-    "question": "Soccer sample question 82?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 83,
-    "question": "Soccer sample question 83?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 84,
-    "question": "Soccer sample question 84?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 85,
-    "question": "Soccer sample question 85?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 86,
-    "question": "Soccer sample question 86?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 87,
-    "question": "Soccer sample question 87?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 88,
-    "question": "Soccer sample question 88?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 89,
-    "question": "Soccer sample question 89?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 90,
-    "question": "Soccer sample question 90?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 91,
-    "question": "Soccer sample question 91?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 92,
-    "question": "Soccer sample question 92?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 93,
-    "question": "Soccer sample question 93?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 94,
-    "question": "Soccer sample question 94?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 95,
-    "question": "Soccer sample question 95?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 96,
-    "question": "Soccer sample question 96?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 97,
-    "question": "Soccer sample question 97?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 98,
-    "question": "Soccer sample question 98?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 99,
-    "question": "Soccer sample question 99?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
-  },
-  {
-    "id": 100,
-    "question": "Soccer sample question 100?",
-    "options": [
-      "Option A",
-      "Option B",
-      "Option C",
-      "Option D"
-    ],
-    "answer": "Option A"
+    "question": "Which player is known as 'The Magician'?",
+    "options": ["Xavi", "Andrea Pirlo", "Claude Makélélé", "Michael Carrick"],
+    "answer": "Xavi"
   }
 ]

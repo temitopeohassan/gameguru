@@ -1,66 +1,100 @@
-## Foundry
+# Football Quiz NFT - Foundry Project
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A Solidity smart contract for minting NFTs based on football quiz scores, built with the Foundry framework.
 
-Foundry consists of:
+## Features
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- **Score-based NFT Minting**: Mint NFTs with dynamic metadata based on quiz scores
+- **Dynamic SVG Generation**: Generate unique SVG images based on performance levels
+- **Rarity System**: 5 rarity tiers (Basic, Common, Rare, Epic, Legendary)
+- **Leaderboard**: Track top scores across all players
+- **Achievement Tracking**: Store personal best scores and timestamps
 
-## Documentation
+## Prerequisites
 
-https://book.getfoundry.sh/
+- [Foundry](https://book.getfoundry.sh/getting-started/installation)
+- Git
+
+## Installation
+
+1. **Initialize a new Foundry project:**
+```bash
+forge init football-quiz-nft
+cd football-quiz-nft
+```
+
+2. **Install OpenZeppelin contracts:**
+```bash
+forge install OpenZeppelin/openzeppelin-contracts
+```
+
+3. **Copy the contract files:**
+   - Place `FootballQuizNFT.sol` in `src/`
+   - Place `Deploy.s.sol` in `script/`
+   - Place `FootballQuizNFT.t.sol` in `test/`
+   - Replace `foundry.toml` with the provided configuration
+
+4. **Set up environment variables:**
+```bash
+cp .env.example .env
+# Edit .env with your actual values
+```
+
+## Project Structure
+
+```
+football-quiz-nft/
+├── src/
+│   └── FootballQuizNFT.sol          # Main contract
+├── script/
+│   └── Deploy.s.sol                 # Deployment scripts
+├── test/
+│   └── FootballQuizNFT.t.sol        # Test suite
+├── foundry.toml                     # Foundry configuration
+├── .env.example                     # Environment template
+└── README.md                        # This file
+```
 
 ## Usage
 
-### Build
+### Building
 
-```shell
-$ forge build
+```bash
+forge build
 ```
 
-### Test
+### Testing
 
-```shell
-$ forge test
+Run all tests:
+```bash
+forge test
 ```
 
-### Format
-
-```shell
-$ forge fmt
+Run tests with verbosity:
+```bash
+forge test -vvv
 ```
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
+Run specific test:
+```bash
+forge test --match-contract FootballQuizNFTTest
 ```
 
-### Anvil
+### Deployment
 
-```shell
-$ anvil
+#### Deploy to local network (Anvil):
+
+1. Start local node:
+```bash
+anvil
 ```
 
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+2. Deploy contract:
+```bash
+forge script script/Deploy.s.sol:DeployFootballQuizNFT --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
 ```
 
-### Cast
+#### Deploy to testnet (Sepolia):
 
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+```bash
+forge script
