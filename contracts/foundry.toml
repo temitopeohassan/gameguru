@@ -8,10 +8,10 @@ remappings = [
 ]
 
 # Compiler settings
-solc_version = "0.8.19"
+solc_version = "0.8.20"
 optimizer = true
 optimizer_runs = 200
-via_ir = false
+via_ir = true
 
 # Test settings
 fuzz = { runs = 256 }
@@ -34,6 +34,7 @@ polygon = { key = "${POLYGONSCAN_API_KEY}" }
 mumbai = { key = "${POLYGONSCAN_API_KEY}" }
 arbitrum = { key = "${ARBISCAN_API_KEY}" }
 optimism = { key = "${OPTIMISTIC_ETHERSCAN_API_KEY}" }
+celo = { key = "${CELOSCAN_API_KEY}", url = "https://api.celoscan.io/api" }
 
 # Gas settings
 [profile.default.optimizer_details]

@@ -7,7 +7,7 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 
-contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
+contract FootballQuizNFT is ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     uint256 private _tokenIdCounter;
@@ -24,7 +24,10 @@ contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
     // Events
     event ScoreNFTMinted(address indexed to, uint256 indexed tokenId, uint256 score);
     
-    constructor(address initialOwner) ERC721("Football Quiz Achievement", "FQA") Ownable(initialOwner) {}
+    constructor(address initialOwner) 
+        ERC721("Football Quiz Achievement", "FQA") 
+        Ownable(initialOwner) 
+    {}
 
     /**
      * @dev Mint an NFT with the user's quiz score
@@ -51,8 +54,7 @@ contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
         _safeMint(to, tokenId);
         
         // Set the token URI with generated metadata
-        string memory tokenURI = generateTokenURI(tokenId, score);
-        _setTokenURI(tokenId, tokenURI);
+        _setTokenURI(tokenId, generateTokenURI(tokenId, score));
         
         emit ScoreNFTMinted(to, tokenId, score);
         
@@ -63,7 +65,6 @@ contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
      * @dev Generate SVG image for the NFT based on score
      */
     function generateSVG(uint256 score) internal pure returns (string memory) {
-        // Determine colors and message based on score
         string memory bgColor;
         string memory textColor;
         string memory message;
@@ -73,27 +74,27 @@ contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
             bgColor = "#FFD700"; // Gold
             textColor = "#8B4513";
             message = "LEGENDARY!";
-            trophy = "🏆";
+            trophy = "\u1F3C6"; // 🏆
         } else if (score >= 15) {
             bgColor = "#C0C0C0"; // Silver
             textColor = "#2F4F4F";
             message = "EXPERT!";
-            trophy = "🥈";
+            trophy = "\u1F948"; // 🥈
         } else if (score >= 10) {
             bgColor = "#CD7F32"; // Bronze
             textColor = "#FFFFFF";
             message = "SKILLED!";
-            trophy = "🥉";
+            trophy = "\u1F949"; // 🥉
         } else if (score >= 5) {
             bgColor = "#4169E1"; // Royal Blue
             textColor = "#FFFFFF";
             message = "GOOD JOB!";
-            trophy = "⚽";
+            trophy = "\u26BD"; // ⚽
         } else {
             bgColor = "#32CD32"; // Lime Green
             textColor = "#FFFFFF";
             message = "KEEP TRYING!";
-            trophy = "🎯";
+            trophy = "\u1F3AF"; // 🎯
         }
 
         return string(abi.encodePacked(
@@ -246,16 +247,17 @@ contract FootballQuizNFT is ERC721, ERC721URIStorage, Ownable {
         return _tokenIdCounter;
     }
 
-    // Override required functions
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
-        return super.tokenURI(tokenId);
-    }
-
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
+    function tokenURI(uint256 tokenId) public view override(ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
     }
 }

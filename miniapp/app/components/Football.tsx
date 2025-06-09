@@ -5,6 +5,16 @@ import { Button } from "./Button";
 import { Card } from "./Card";
 import { Icon } from "./Icon";
 import { API_BASE_URL } from '../config';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
+import { parseAbi } from 'viem';
+
+// NFT Contract configuration
+const NFT_CONTRACT_ADDRESS = "0x6A0F4AdD27463B1EC3ce1a35a545A3598bA76c96";
+const NFT_ABI = parseAbi([
+  'function mint(address to, uint256 score, string memory metadata) public returns (uint256)',
+  'function ownerOf(uint256 tokenId) view returns (address)',
+  'function tokenURI(uint256 tokenId) view returns (string)'
+]);
 
 type Question = {
   id: number;
@@ -24,10 +34,38 @@ export function Football() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [gameOver, setGameOver] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintingComplete, setMintingComplete] = useState(false);
+  const [tokenId, setTokenId] = useState<number | null>(null);
+
+  // Wagmi hooks
+  const { address } = useAccount();
+  const { 
+    data: hash, 
+    writeContract, 
+    isPending: isWritePending,
+    error: writeError 
+  } = useWriteContract();
+  
+  const { 
+    isLoading: isConfirming, 
+    isSuccess: isConfirmed,
+    error: confirmError 
+  } = useWaitForTransactionReceipt({ 
+    hash,
+  });
 
   useEffect(() => {
     fetchQuestions();
   }, []);
+
+  // Handle successful NFT minting
+  useEffect(() => {
+    if (isConfirmed && isMinting) {
+      setMintingComplete(true);
+      setIsMinting(false);
+    }
+  }, [isConfirmed, isMinting]);
 
   const fetchQuestions = async () => {
     try {
@@ -37,7 +75,6 @@ export function Football() {
       }
       const data = await response.json();
       setQuestions(data);
-      // Set the first random question
       if (data.length > 0) {
         const randomQuestion = data[Math.floor(Math.random() * data.length)];
         setCurrentQuestion(randomQuestion);
@@ -51,21 +88,59 @@ export function Football() {
     }
   };
 
+  const mintNFT = async () => {
+    if (!address) {
+      setError("Please connect your wallet to mint NFT");
+      return;
+    }
+
+    try {
+      setIsMinting(true);
+      setError(null);
+
+      const metadata = JSON.stringify({
+        name: `Football Quiz Score: ${score}`,
+        description: `You scored ${score} correct answers in a row!`,
+        image: "", // Add your NFT image URL here
+        attributes: [
+          {
+            trait_type: "Score",
+            value: score
+          },
+          {
+            trait_type: "Game",
+            value: "Football Quiz"
+          },
+          {
+            trait_type: "Date",
+            value: new Date().toISOString()
+          }
+        ]
+      });
+
+      writeContract({
+        address: NFT_CONTRACT_ADDRESS,
+        abi: NFT_ABI,
+        functionName: 'mint',
+        args: [address, BigInt(score), metadata],
+      });
+
+    } catch (err) {
+      console.error('Error minting NFT:', err);
+      setError('Failed to mint NFT. Please try again.');
+      setIsMinting(false);
+    }
+  };
+
   const getNextQuestion = () => {
     if (questions.length === 0) return null;
     
-    // If we've used all questions, reset and start over with random selection
     if (usedQuestionIds.size >= questions.length) {
       setUsedQuestionIds(new Set());
     }
     
-    // Get available questions (not used in current cycle)
     const availableQuestions = questions.filter(q => !usedQuestionIds.has(q.id));
-    
-    // If no available questions, use all questions again
     const questionPool = availableQuestions.length > 0 ? availableQuestions : questions;
-    
-    // Select random question from available pool
     const randomIndex = Math.floor(Math.random() * questionPool.length);
     return questionPool[randomIndex];
   };
@@ -87,6 +162,8 @@ export function Football() {
       setScore(prev => prev + 1);
     } else {
       setGameOver(true);
+      // Trigger NFT minting when user gets a question wrong
+      mintNFT();
     }
   };
 
@@ -108,8 +185,11 @@ export function Football() {
     setIsCorrect(false);
     setGameOver(false);
     setUsedQuestionIds(new Set());
+    setIsMinting(false);
+    setMintingComplete(false);
+    setTokenId(null);
+    setError(null);
     
-    // Start with a new random question
     if (questions.length > 0) {
       const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
       setCurrentQuestion(randomQuestion);
@@ -152,9 +232,62 @@ export function Football() {
                     ? "Good effort! Keep learning!" 
                     : "Keep practicing to improve your knowledge!"}
             </p>
+
+            {/* Minting in Progress */}
+            {isMinting && !mintingComplete && (
+              <div className="space-y-4 mt-6">
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-yellow-500 border-t-transparent"></div>
+                    <span className="text-yellow-700 dark:text-yellow-300">
+                      {isConfirming ? 'Confirming transaction...' : 'Minting your NFT...'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Minting Complete */}
+            {mintingComplete && (
+              <div className="space-y-4 mt-6">
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                  <h3 className="font-semibold text-green-800 dark:text-green-200">
+                    🎉 NFT Minted Successfully!
+                  </h3>
+                  <p className="text-sm text-green-600 dark:text-green-300 mt-1">
+                    Your football quiz score has been immortalized as an NFT
+                  </p>
+                  {hash && (
+                    <p className="text-xs text-green-500 mt-2 break-all">
+                      Transaction: {hash}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Wallet Connection Required */}
+            {!address && (
+              <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                <p className="text-orange-700 dark:text-orange-300 text-sm">
+                  Connect your wallet to mint your score as an NFT
+                </p>
+              </div>
+            )}
+
+            {/* Error Display */}
+            {(writeError || confirmError || error) && (
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <p className="text-red-700 dark:text-red-300 text-sm">
+                  {error || writeError?.message || confirmError?.message}
+                </p>
+              </div>
+            )}
+
             <Button 
               onClick={handleRestart}
               className="mt-4"
+              variant="outline"
             >
               Try Again
             </Button>
