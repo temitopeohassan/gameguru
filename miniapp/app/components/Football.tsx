@@ -7,6 +7,7 @@ import { Icon } from "./Icon";
 import { API_BASE_URL } from '../config';
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
 import { parseAbi } from 'viem';
+import { useTheme } from 'next-themes';
 
 // NFT Contract configuration
 const NFT_CONTRACT_ADDRESS = "0x6A0F4AdD27463B1EC3ce1a35a545A3598bA76c96";
@@ -24,6 +25,8 @@ type Question = {
 };
 
 export function Football() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [usedQuestionIds, setUsedQuestionIds] = useState<Set<number>>(new Set());
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -55,6 +58,11 @@ export function Football() {
     hash,
   });
 
+  // Handle theme mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     fetchQuestions();
   }, []);
@@ -66,6 +74,10 @@ export function Football() {
       setIsMinting(false);
     }
   }, [isConfirmed, isMinting]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   const fetchQuestions = async () => {
     try {
@@ -197,10 +209,14 @@ export function Football() {
     }
   };
 
+  if (!mounted) {
+    return null; // Prevent flash of wrong theme
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-gray-600">Loading questions...</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300">Loading questions...</p>
       </div>
     );
   }
@@ -208,7 +224,7 @@ export function Football() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-red-600">{error}</p>
+        <p className="text-lg text-red-600 dark:text-red-400">{error}</p>
       </div>
     );
   }
@@ -216,14 +232,28 @@ export function Football() {
   if (gameOver) {
     return (
       <div className="space-y-6 animate-fade-in">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? (
+              <Icon name="sun" className="w-5 h-5 text-yellow-500" />
+            ) : (
+              <Icon name="moon" className="w-5 h-5 text-gray-700" />
+            )}
+          </button>
+        </div>
+
         <Card title="Quiz Complete!">
           <div className="text-center space-y-4">
             <Icon name="star" size="lg" className="text-yellow-500 mx-auto" />
-            <h2 className="text-2xl font-bold">Your Score: {score}</h2>
-            <p className="text-gray-600">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Score: {score}</h2>
+            <p className="text-gray-600 dark:text-gray-300">
               You answered {score} question{score !== 1 ? 's' : ''} correctly in a row!
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               {score > 10 
                 ? "Incredible! You're a true football expert!" 
                 : score > 5 
@@ -258,7 +288,7 @@ export function Football() {
                     Your football quiz score has been immortalized as an NFT
                   </p>
                   {hash && (
-                    <p className="text-xs text-green-500 mt-2 break-all">
+                    <p className="text-xs text-green-500 dark:text-green-400 mt-2 break-all">
                       Transaction: {hash}
                     </p>
                   )}
@@ -300,16 +330,30 @@ export function Football() {
   if (!currentQuestion) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-gray-600">No questions available.</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300">No questions available.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Icon name="sun" className="w-5 h-5 text-yellow-500" />
+          ) : (
+            <Icon name="moon" className="w-5 h-5 text-gray-700" />
+          )}
+        </button>
+      </div>
+
       <Card title={`Question ${score + 1} • Score: ${score}`}>
         <div className="space-y-6">
-          <p className="text-lg font-medium">{currentQuestion.question}</p>
+          <p className="text-lg font-medium text-gray-900 dark:text-white">{currentQuestion.question}</p>
           
           <div className="space-y-3">
             {currentQuestion.options.map((option, index) => (
@@ -318,15 +362,15 @@ export function Football() {
                 onClick={() => handleOptionSelect(index)}
                 className={`w-full p-4 text-left rounded-lg border transition-all duration-200 ${
                   selectedOption === index
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-100'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 text-gray-900 dark:text-white'
                 } ${
                   isAnswered && option === currentQuestion.answer
-                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100'
                     : ''
                 } ${
                   isAnswered && selectedOption === index && !isCorrect
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100'
                     : ''
                 }`}
                 disabled={isAnswered}
