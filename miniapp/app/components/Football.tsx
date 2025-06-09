@@ -25,7 +25,7 @@ type Question = {
 };
 
 export function Football() {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [usedQuestionIds, setUsedQuestionIds] = useState<Set<number>>(new Set());
@@ -74,10 +74,6 @@ export function Football() {
       setIsMinting(false);
     }
   }, [isConfirmed, isMinting]);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
 
   const fetchQuestions = async () => {
     try {
@@ -232,20 +228,6 @@ export function Football() {
   if (gameOver) {
     return (
       <div className="space-y-6 animate-fade-in">
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? (
-              <Icon name="sun" className="w-5 h-5 text-yellow-500" />
-            ) : (
-              <Icon name="moon" className="w-5 h-5 text-gray-700" />
-            )}
-          </button>
-        </div>
-
         <Card title="Quiz Complete!">
           <div className="text-center space-y-4">
             <Icon name="star" size="lg" className="text-yellow-500 mx-auto" />
@@ -337,20 +319,6 @@ export function Football() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? (
-            <Icon name="sun" className="w-5 h-5 text-yellow-500" />
-          ) : (
-            <Icon name="moon" className="w-5 h-5 text-gray-700" />
-          )}
-        </button>
-      </div>
-
       <Card title={`Question ${score + 1} • Score: ${score}`}>
         <div className="space-y-6">
           <p className="text-lg font-medium text-gray-900 dark:text-white">{currentQuestion.question}</p>
