@@ -170,8 +170,7 @@ export function Football() {
       setScore(prev => prev + 1);
     } else {
       setGameOver(true);
-      // Trigger NFT minting when user gets a question wrong
-      mintNFT();
+      // Remove automatic NFT minting
     }
   };
 
@@ -244,6 +243,17 @@ export function Football() {
                     ? "Good effort! Keep learning!" 
                     : "Keep practicing to improve your knowledge!"}
             </p>
+
+            {/* Mint NFT Button */}
+            {!isMinting && !mintingComplete && (
+              <Button 
+                onClick={mintNFT}
+                className="mt-4"
+                disabled={!address}
+              >
+                {address ? 'Mint Your Score as NFT' : 'Connect Wallet to Mint NFT'}
+              </Button>
+            )}
 
             {/* Minting in Progress */}
             {isMinting && !mintingComplete && (

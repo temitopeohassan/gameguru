@@ -14,6 +14,11 @@ export default function Home() {
 
   const { address } = useAccount();
 
+  const truncateAddress = (address: string | undefined) => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   const testAuth = async () => {
     try {
       const res = await fetch("/api/test", {
@@ -50,6 +55,11 @@ export default function Home() {
             />
             <h1 className="text-xl font-bold">Game Guru</h1>
           </div>
+          {address && (
+            <div className="px-3 py-1.5 bg-[var(--app-gray)] rounded-full text-sm font-medium">
+              {truncateAddress(address)}
+            </div>
+          )}
         </div>
       </header>
 
