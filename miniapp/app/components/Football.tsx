@@ -5,9 +5,10 @@ import { Button } from "./Button";
 import { Card } from "./Card";
 import { Icon } from "./Icon";
 import { API_BASE_URL } from '../config';
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
-import { parseAbi } from 'viem';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount, useBalance } from 'wagmi';
 import { useTheme } from 'next-themes';
+import { parseAbi } from 'viem';
+import { getBalance } from '@wagmi/core';
 
 // NFT Contract configuration
 const NFT_CONTRACT_ADDRESS = "0x6D8B3E655519a31F80cc90bbA06c0ad9a97BAf69";
@@ -56,6 +57,11 @@ export function Football() {
     error: confirmError 
   } = useWaitForTransactionReceipt({ 
     hash,
+  });
+
+  const { data: balance } = useBalance({
+    address,
+    chainId: 42220
   });
 
   // Enhanced theme detection
@@ -133,169 +139,176 @@ export function Football() {
     }
   };
 
-  // Enhanced mintNFT function with better error handling and debugging
-const mintNFT = async () => {
-  if (!address) {
-    setError("Please connect your wallet to mint NFT");
-    return;
-  }
+  const mintNFT = async () => {
+    if (!address) {
+      setError("Please connect your wallet to mint NFT");
+      return;
+    }
 
-  try {
-    setIsMinting(true);
-    setError(null);
+    try {
+      setIsMinting(true);
+      setError(null);
 
-    console.log("=== NFT Minting Details ===");
-    console.log("Wallet address:", address);
-    console.log("Contract address:", NFT_CONTRACT_ADDRESS);
-    console.log("Score:", score);
+      // Check balance before proceeding
+      if (!balance?.value || balance.value < BigInt("100000000000000")) {
+        setError("Insufficient CELO balance. Please fund your wallet.");
+        setIsMinting(false);
+        return;
+      }
 
-    const metadata = JSON.stringify({
-      name: `Football Quiz Score: ${score}`,
-      description: `You scored ${score} correct answers in a row!`,
-      image: "", // Add your NFT image URL here
-      attributes: [
-        {
-          trait_type: "Score",
-          value: score
-        },
-        {
-          trait_type: "Game",
-          value: "Football Quiz"
-        },
-        {
-          trait_type: "Date",
-          value: new Date().toISOString()
-        }
-      ]
-    });
+      console.log("=== NFT Minting Details ===");
+      console.log("Wallet address:", address);
+      console.log("Contract address:", NFT_CONTRACT_ADDRESS);
+      console.log("Score:", score);
+      console.log("Current balance:", balance?.value.toString());
 
-    console.log("=== Contract Parameters ===");
-    console.log("Function: mint");
-    console.log("Arguments:", {
-      to: address,
-      score: BigInt(score),
-      metadata: metadata
-    });
-    console.log("Value (in wei):", BigInt("1000000000000000")); // 0.001 CELO
+      const metadata = JSON.stringify({
+        name: `Football Quiz Score: ${score}`,
+        description: `You scored ${score} correct answers in a row!`,
+        image: "", // Add your NFT image URL here
+        attributes: [
+          {
+            trait_type: "Score",
+            value: score
+          },
+          {
+            trait_type: "Game",
+            value: "Football Quiz"
+          },
+          {
+            trait_type: "Date",
+            value: new Date().toISOString()
+          }
+        ]
+      });
 
-    writeContract({
-      address: NFT_CONTRACT_ADDRESS,
-      abi: NFT_ABI,
-      functionName: 'mint',
-      args: [address, BigInt(score), metadata],
-      value: BigInt("100000000000000"), // 0.0001 CELO in wei
-    });
+      console.log("=== Contract Parameters ===");
+      console.log("Function: mint");
+      console.log("Arguments:", {
+        to: address,
+        score: BigInt(score),
+        metadata: metadata
+      });
+      console.log("Value (in wei):", BigInt("1000000000000000")); // 0.001 CELO
 
-    console.log("=== Transaction Initiated ===");
-    console.log("Waiting for transaction confirmation...");
+      writeContract({
+        address: NFT_CONTRACT_ADDRESS,
+        abi: NFT_ABI,
+        functionName: 'mint',
+        args: [address, BigInt(score), metadata],
+        value: BigInt("100000000000000"), // 0.0001 CELO in wei
+      });
 
-  } catch (err) {
-    console.error('=== NFT Minting Error ===');
-    console.error('Error details:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    console.error('Error message:', errorMessage);
-    setError(`Failed to mint NFT: ${errorMessage}`);
-    setIsMinting(false);
-  }
-};
+      console.log("=== Transaction Initiated ===");
+      console.log("Waiting for transaction confirmation...");
 
-// Alternative version with lower mint fee to test
-const mintNFTWithLowerFee = async () => {
-  if (!address) {
-    setError("Please connect your wallet to mint NFT");
-    return;
-  }
+    } catch (err) {
+      console.error('=== NFT Minting Error ===');
+      console.error('Error details:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error('Error message:', errorMessage);
+      setError(`Failed to mint NFT: ${errorMessage}`);
+      setIsMinting(false);
+    }
+  };
 
-  try {
-    setIsMinting(true);
-    setError(null);
+  // Alternative version with lower mint fee to test
+  const mintNFTWithLowerFee = async () => {
+    if (!address) {
+      setError("Please connect your wallet to mint NFT");
+      return;
+    }
 
-    const metadata = JSON.stringify({
-      name: `Football Quiz Score: ${score}`,
-      description: `You scored ${score} correct answers in a row!`,
-      image: "",
-      attributes: [
-        {
-          trait_type: "Score",
-          value: score
-        },
-        {
-          trait_type: "Game",
-          value: "Football Quiz"
-        },
-        {
-          trait_type: "Date",
-          value: new Date().toISOString()
-        }
-      ]
-    });
+    try {
+      setIsMinting(true);
+      setError(null);
 
-    // Try with a much lower value first to test if it's a value issue
-    writeContract({
-      address: NFT_CONTRACT_ADDRESS,
-      abi: NFT_ABI,
-      functionName: 'mint',
-      args: [address, BigInt(score), metadata],
-      value: BigInt("1000000000000000"), // 0.001 CELO in wei (much lower)
-      gas: BigInt("500000"),
-    });
+      const metadata = JSON.stringify({
+        name: `Football Quiz Score: ${score}`,
+        description: `You scored ${score} correct answers in a row!`,
+        image: "",
+        attributes: [
+          {
+            trait_type: "Score",
+            value: score
+          },
+          {
+            trait_type: "Game",
+            value: "Football Quiz"
+          },
+          {
+            trait_type: "Date",
+            value: new Date().toISOString()
+          }
+        ]
+      });
 
-  } catch (err) {
-    console.error('Error minting NFT:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    setError(`Failed to mint NFT: ${errorMessage}`);
-    setIsMinting(false);
-  }
-};
+      // Try with a much lower value first to test if it's a value issue
+      writeContract({
+        address: NFT_CONTRACT_ADDRESS,
+        abi: NFT_ABI,
+        functionName: 'mint',
+        args: [address, BigInt(score), metadata],
+        value: BigInt("1000000000000000"), // 0.001 CELO in wei (much lower)
+        gas: BigInt("500000"),
+      });
 
-// Version without payment to test if the contract requires payment
-const mintNFTFree = async () => {
-  if (!address) {
-    setError("Please connect your wallet to mint NFT");
-    return;
-  }
+    } catch (err) {
+      console.error('Error minting NFT:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to mint NFT: ${errorMessage}`);
+      setIsMinting(false);
+    }
+  };
 
-  try {
-    setIsMinting(true);
-    setError(null);
+  // Version without payment to test if the contract requires payment
+  const mintNFTFree = async () => {
+    if (!address) {
+      setError("Please connect your wallet to mint NFT");
+      return;
+    }
 
-    const metadata = JSON.stringify({
-      name: `Football Quiz Score: ${score}`,
-      description: `You scored ${score} correct answers in a row!`,
-      image: "",
-      attributes: [
-        {
-          trait_type: "Score",
-          value: score
-        },
-        {
-          trait_type: "Game",
-          value: "Football Quiz"
-        },
-        {
-          trait_type: "Date",
-          value: new Date().toISOString()
-        }
-      ]
-    });
+    try {
+      setIsMinting(true);
+      setError(null);
 
-    // Try without sending CELO to see if the contract is free
-    writeContract({
-      address: NFT_CONTRACT_ADDRESS,
-      abi: NFT_ABI,
-      functionName: 'mint',
-      args: [address, BigInt(score), metadata],
-      // Remove the value parameter entirely
-      gas: BigInt("500000"),
-    });
+      const metadata = JSON.stringify({
+        name: `Football Quiz Score: ${score}`,
+        description: `You scored ${score} correct answers in a row!`,
+        image: "",
+        attributes: [
+          {
+            trait_type: "Score",
+            value: score
+          },
+          {
+            trait_type: "Game",
+            value: "Football Quiz"
+          },
+          {
+            trait_type: "Date",
+            value: new Date().toISOString()
+          }
+        ]
+      });
 
-  } catch (err) {
-    console.error('Error minting NFT:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    setError(`Failed to mint NFT: ${errorMessage}`);
-    setIsMinting(false);
-  }
-};
+      // Try without sending CELO to see if the contract is free
+      writeContract({
+        address: NFT_CONTRACT_ADDRESS,
+        abi: NFT_ABI,
+        functionName: 'mint',
+        args: [address, BigInt(score), metadata],
+        // Remove the value parameter entirely
+        gas: BigInt("500000"),
+      });
+
+    } catch (err) {
+      console.error('Error minting NFT:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Failed to mint NFT: ${errorMessage}`);
+      setIsMinting(false);
+    }
+  };
 
   const getNextQuestion = () => {
     if (questions.length === 0) return null;
