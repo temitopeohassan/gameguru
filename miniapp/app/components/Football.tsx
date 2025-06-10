@@ -144,6 +144,7 @@ const mintNFT = async () => {
     setIsMinting(true);
     setError(null);
 
+    console.log("=== NFT Minting Details ===");
     console.log("Wallet address:", address);
     console.log("Contract address:", NFT_CONTRACT_ADDRESS);
     console.log("Score:", score);
@@ -168,22 +169,33 @@ const mintNFT = async () => {
       ]
     });
 
-    console.log("Metadata:", metadata);
+    console.log("=== Contract Parameters ===");
+    console.log("Function: mint");
+    console.log("Arguments:", {
+      to: address,
+      score: BigInt(score),
+      metadata: metadata
+    });
+    console.log("Value (in wei):", BigInt("1000000000000000")); // 0.001 CELO
+    console.log("Gas limit:", BigInt("5000000"));
 
-    // Try with explicit gas settings
     writeContract({
       address: NFT_CONTRACT_ADDRESS,
       abi: NFT_ABI,
       functionName: 'mint',
       args: [address, BigInt(score), metadata],
       value: BigInt("1000000000000000"), // 0.001 CELO in wei
-      // Add explicit gas settings to prevent estimation issues
       gas: BigInt("5000000"), // Set a reasonable gas limit
     });
 
+    console.log("=== Transaction Initiated ===");
+    console.log("Waiting for transaction confirmation...");
+
   } catch (err) {
-    console.error('Error minting NFT:', err);
+    console.error('=== NFT Minting Error ===');
+    console.error('Error details:', err);
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    console.error('Error message:', errorMessage);
     setError(`Failed to mint NFT: ${errorMessage}`);
     setIsMinting(false);
   }
