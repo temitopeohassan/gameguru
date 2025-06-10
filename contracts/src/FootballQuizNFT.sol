@@ -11,7 +11,7 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     uint256 private _tokenIdCounter;
-    uint256 public constant MINT_PRICE = 0.001 ether; // 0.5 CELO
+    uint256 public constant MINT_PRICE = 0.0001 ether; // 0.05 CELO
     
     // Mapping from token ID to quiz score
     mapping(uint256 => uint256) public tokenScores;

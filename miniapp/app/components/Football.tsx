@@ -184,8 +184,8 @@ const mintNFT = async () => {
       abi: NFT_ABI,
       functionName: 'mint',
       args: [address, BigInt(score), metadata],
-      value: BigInt("1000000000000000"), // 0.001 CELO in wei
-      gas: BigInt("5000000"), // Set a reasonable gas limit
+      value: BigInt("100000000000000"), // 0.0001 CELO in wei
+      gas: BigInt("50000000000000"), // Set a reasonable gas limit
     });
 
     console.log("=== Transaction Initiated ===");
