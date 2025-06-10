@@ -10,7 +10,7 @@ import { parseAbi } from 'viem';
 import { useTheme } from 'next-themes';
 
 // NFT Contract configuration
-const NFT_CONTRACT_ADDRESS = "0x8048E80Ad664f479E7792AEBD5BAB0340B05a7B5";
+const NFT_CONTRACT_ADDRESS = "0x6D8B3E655519a31F80cc90bbA06c0ad9a97BAf69";
 const NFT_ABI = parseAbi([
   'function mint(address to, uint256 score, string memory metadata) public payable returns (uint256)',
   'function ownerOf(uint256 tokenId) view returns (address)',
