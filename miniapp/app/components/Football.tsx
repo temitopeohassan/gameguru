@@ -10,7 +10,7 @@ import { parseAbi } from 'viem';
 import { useTheme } from 'next-themes';
 
 // NFT Contract configuration
-const NFT_CONTRACT_ADDRESS = "0xaa40C7Fe8B36a205f8E43Ca6Bb7a52F176a30fd2";
+const NFT_CONTRACT_ADDRESS = "0x8048E80Ad664f479E7792AEBD5BAB0340B05a7B5";
 const NFT_ABI = parseAbi([
   'function mint(address to, uint256 score, string memory metadata) public payable returns (uint256)',
   'function ownerOf(uint256 tokenId) view returns (address)',
@@ -176,9 +176,9 @@ const mintNFT = async () => {
       abi: NFT_ABI,
       functionName: 'mint',
       args: [address, BigInt(score), metadata],
-      value: BigInt("10000000000000000"), // 0.01 CELO in wei
+      value: BigInt("1000000000000000"), // 0.001 CELO in wei
       // Add explicit gas settings to prevent estimation issues
-      gas: BigInt("500000"), // Set a reasonable gas limit
+      gas: BigInt("5000000"), // Set a reasonable gas limit
     });
 
   } catch (err) {
