@@ -10,9 +10,9 @@ import { parseAbi } from 'viem';
 import { useTheme } from 'next-themes';
 
 // NFT Contract configuration
-const NFT_CONTRACT_ADDRESS = "0x6A0F4AdD27463B1EC3ce1a35a545A3598bA76c96";
+const NFT_CONTRACT_ADDRESS = "0xaa40C7Fe8B36a205f8E43Ca6Bb7a52F176a30fd2";
 const NFT_ABI = parseAbi([
-  'function mint(address to, uint256 score, string memory metadata) public returns (uint256)',
+  'function mint(address to, uint256 score, string memory metadata) public payable returns (uint256)',
   'function ownerOf(uint256 tokenId) view returns (address)',
   'function tokenURI(uint256 tokenId) view returns (string)'
 ]);
@@ -25,7 +25,7 @@ type Question = {
 };
 
 export function Football() {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [usedQuestionIds, setUsedQuestionIds] = useState<Set<number>>(new Set());
@@ -58,9 +58,46 @@ export function Football() {
     hash,
   });
 
-  // Handle theme mounting
+  // Enhanced theme detection
+  const getCurrentTheme = () => {
+    if (!mounted) return 'light'; // Default to light during SSR
+    
+    // Use resolvedTheme first (accounts for system preference)
+    if (resolvedTheme) return resolvedTheme;
+    
+    // Fallback to theme setting
+    if (theme && theme !== 'system') return theme;
+    
+    // Fallback to system theme
+    if (systemTheme) return systemTheme;
+    
+    // Final fallback: detect from system directly
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    
+    return 'light';
+  };
+
+  const currentTheme = getCurrentTheme();
+  const isDarkMode = currentTheme === 'dark';
+
+  // Handle theme mounting with enhanced detection
   useEffect(() => {
     setMounted(true);
+    
+    // Listen for system theme changes
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleThemeChange = () => {
+        // Force re-render when system theme changes
+        setMounted(false);
+        setTimeout(() => setMounted(true), 0);
+      };
+      
+      mediaQuery.addEventListener('change', handleThemeChange);
+      return () => mediaQuery.removeEventListener('change', handleThemeChange);
+    }
   }, []);
 
   useEffect(() => {
@@ -131,6 +168,7 @@ export function Football() {
         abi: NFT_ABI,
         functionName: 'mint',
         args: [address, BigInt(score), metadata],
+        value: BigInt("10000000000000000"), // 0.01 CELO in wei
       });
 
     } catch (err) {
@@ -170,7 +208,6 @@ export function Football() {
       setScore(prev => prev + 1);
     } else {
       setGameOver(true);
-      // Remove automatic NFT minting
     }
   };
 
@@ -204,37 +241,75 @@ export function Football() {
     }
   };
 
+  // Enhanced loading screen with theme-aware styling
   if (!mounted) {
-    return null; // Prevent flash of wrong theme
+    return (
+      <div className="flex items-center justify-center min-h-[400px] bg-white dark:bg-gray-900 transition-colors duration-200">
+        <div className="animate-pulse">
+          <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+        </div>
+      </div>
+    );
   }
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-gray-600 dark:text-gray-300">Loading questions...</p>
+      <div className={`flex items-center justify-center min-h-[400px] transition-colors duration-200 ${
+        isDarkMode ? 'bg-gray-900' : 'bg-white'
+      }`}>
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent mx-auto"></div>
+          <p className={`text-lg transition-colors duration-200 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+            Loading questions...
+          </p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-red-600 dark:text-red-400">{error}</p>
+      <div className={`flex items-center justify-center min-h-[400px] transition-colors duration-200 ${
+        isDarkMode ? 'bg-gray-900' : 'bg-white'
+      }`}>
+        <div className="text-center space-y-4">
+          <Icon name="alert-circle" size="lg" className="text-red-500 mx-auto" />
+          <p className={`text-lg transition-colors duration-200 ${
+            isDarkMode ? 'text-red-400' : 'text-red-600'
+          }`}>
+            {error}
+          </p>
+          <Button onClick={() => window.location.reload()} variant="outline">
+            Retry
+          </Button>
+        </div>
       </div>
     );
   }
 
   if (gameOver) {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className={`space-y-6 animate-fade-in transition-colors duration-200 ${
+        isDarkMode ? 'bg-gray-900' : 'bg-white'
+      }`}>
         <Card title="Quiz Complete!">
           <div className="text-center space-y-4">
             <Icon name="star" size="lg" className="text-yellow-500 mx-auto" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Score: {score}</h2>
-            <p className="text-gray-600 dark:text-gray-300">
+            <h2 className={`text-2xl font-bold transition-colors duration-200 ${
+              isDarkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              Your Score: {score}
+            </h2>
+            <p className={`transition-colors duration-200 ${
+              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               You answered {score} question{score !== 1 ? 's' : ''} correctly in a row!
             </p>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className={`transition-colors duration-200 ${
+              isDarkMode ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               {score > 10 
                 ? "Incredible! You're a true football expert!" 
                 : score > 5 
@@ -258,10 +333,16 @@ export function Football() {
             {/* Minting in Progress */}
             {isMinting && !mintingComplete && (
               <div className="space-y-4 mt-6">
-                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                <div className={`p-4 rounded-lg transition-colors duration-200 ${
+                  isDarkMode 
+                    ? 'bg-yellow-900/20 border border-yellow-800' 
+                    : 'bg-yellow-50 border border-yellow-200'
+                }`}>
                   <div className="flex items-center justify-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-yellow-500 border-t-transparent"></div>
-                    <span className="text-yellow-700 dark:text-yellow-300">
+                    <span className={`transition-colors duration-200 ${
+                      isDarkMode ? 'text-yellow-300' : 'text-yellow-700'
+                    }`}>
                       {isConfirming ? 'Confirming transaction...' : 'Minting your NFT...'}
                     </span>
                   </div>
@@ -272,15 +353,25 @@ export function Football() {
             {/* Minting Complete */}
             {mintingComplete && (
               <div className="space-y-4 mt-6">
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <h3 className="font-semibold text-green-800 dark:text-green-200">
+                <div className={`p-4 rounded-lg transition-colors duration-200 ${
+                  isDarkMode 
+                    ? 'bg-green-900/20 border border-green-800' 
+                    : 'bg-green-50 border border-green-200'
+                }`}>
+                  <h3 className={`font-semibold transition-colors duration-200 ${
+                    isDarkMode ? 'text-green-200' : 'text-green-800'
+                  }`}>
                     🎉 NFT Minted Successfully!
                   </h3>
-                  <p className="text-sm text-green-600 dark:text-green-300 mt-1">
+                  <p className={`text-sm mt-1 transition-colors duration-200 ${
+                    isDarkMode ? 'text-green-300' : 'text-green-600'
+                  }`}>
                     Your football quiz score has been immortalized as an NFT
                   </p>
                   {hash && (
-                    <p className="text-xs text-green-500 dark:text-green-400 mt-2 break-all">
+                    <p className={`text-xs mt-2 break-all transition-colors duration-200 ${
+                      isDarkMode ? 'text-green-400' : 'text-green-500'
+                    }`}>
                       Transaction: {hash}
                     </p>
                   )}
@@ -290,8 +381,14 @@ export function Football() {
 
             {/* Wallet Connection Required */}
             {!address && (
-              <div className="mt-6 p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                <p className="text-orange-700 dark:text-orange-300 text-sm">
+              <div className={`mt-6 p-4 rounded-lg transition-colors duration-200 ${
+                isDarkMode 
+                  ? 'bg-orange-900/20 border border-orange-800' 
+                  : 'bg-orange-50 border border-orange-200'
+              }`}>
+                <p className={`text-sm transition-colors duration-200 ${
+                  isDarkMode ? 'text-orange-300' : 'text-orange-700'
+                }`}>
                   Connect your wallet to mint your score as an NFT
                 </p>
               </div>
@@ -299,8 +396,14 @@ export function Football() {
 
             {/* Error Display */}
             {(writeError || confirmError || error) && (
-              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <p className="text-red-700 dark:text-red-300 text-sm">
+              <div className={`mt-4 p-4 rounded-lg transition-colors duration-200 ${
+                isDarkMode 
+                  ? 'bg-red-900/20 border border-red-800' 
+                  : 'bg-red-50 border border-red-200'
+              }`}>
+                <p className={`text-sm transition-colors duration-200 ${
+                  isDarkMode ? 'text-red-300' : 'text-red-700'
+                }`}>
                   {error || writeError?.message || confirmError?.message}
                 </p>
               </div>
@@ -321,17 +424,35 @@ export function Football() {
 
   if (!currentQuestion) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-lg text-gray-600 dark:text-gray-300">No questions available.</p>
+      <div className={`flex items-center justify-center min-h-[400px] transition-colors duration-200 ${
+        isDarkMode ? 'bg-gray-900' : 'bg-white'
+      }`}>
+        <div className="text-center space-y-4">
+          <Icon name="help-circle" size="lg" className="text-gray-400 mx-auto" />
+          <p className={`text-lg transition-colors duration-200 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+            No questions available.
+          </p>
+          <Button onClick={() => window.location.reload()} variant="outline">
+            Refresh
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className={`space-y-6 animate-fade-in transition-colors duration-200 ${
+      isDarkMode ? 'bg-gray-900' : 'bg-white'
+    }`}>
       <Card title={`Question ${score + 1} • Score: ${score}`}>
         <div className="space-y-6">
-          <p className="text-lg font-medium text-gray-900 dark:text-white">{currentQuestion.question}</p>
+          <p className={`text-lg font-medium transition-colors duration-200 ${
+            isDarkMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            {currentQuestion.question}
+          </p>
           
           <div className="space-y-3">
             {currentQuestion.options.map((option, index) => (
@@ -340,15 +461,23 @@ export function Football() {
                 onClick={() => handleOptionSelect(index)}
                 className={`w-full p-4 text-left rounded-lg border transition-all duration-200 ${
                   selectedOption === index
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-100'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 text-gray-900 dark:text-white'
+                    ? isDarkMode
+                      ? 'border-blue-400 bg-blue-900/30 text-blue-100'
+                      : 'border-blue-500 bg-blue-50 text-blue-900'
+                    : isDarkMode
+                      ? 'border-gray-600 hover:border-blue-400 text-white hover:bg-gray-800'
+                      : 'border-gray-200 hover:border-blue-300 text-gray-900 hover:bg-gray-50'
                 } ${
                   isAnswered && option === currentQuestion.answer
-                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100'
+                    ? isDarkMode
+                      ? 'border-green-400 bg-green-900/30 text-green-100'
+                      : 'border-green-500 bg-green-50 text-green-900'
                     : ''
                 } ${
                   isAnswered && selectedOption === index && !isCorrect
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100'
+                    ? isDarkMode
+                      ? 'border-red-400 bg-red-900/30 text-red-100'
+                      : 'border-red-500 bg-red-50 text-red-900'
                     : ''
                 }`}
                 disabled={isAnswered}
@@ -370,10 +499,14 @@ export function Football() {
 
           {isAnswered && (
             <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${
+              <div className={`p-4 rounded-lg transition-colors duration-200 ${
                 isCorrect 
-                  ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300' 
-                  : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
+                  ? isDarkMode
+                    ? 'bg-green-900/30 text-green-200 border border-green-700'
+                    : 'bg-green-50 text-green-700 border border-green-200'
+                  : isDarkMode
+                    ? 'bg-red-900/30 text-red-200 border border-red-700'
+                    : 'bg-red-50 text-red-700 border border-red-200'
               }`}>
                 <p className="font-medium">
                   {isCorrect ? 'Correct!' : 'Incorrect!'}

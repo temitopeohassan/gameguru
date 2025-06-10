@@ -11,6 +11,7 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     uint256 private _tokenIdCounter;
+    uint256 public constant MINT_PRICE = 0.01 ether; // 0.01 CELO
     
     // Mapping from token ID to quiz score
     mapping(uint256 => uint256) public tokenScores;
@@ -34,9 +35,10 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
      * @param to Address to mint the NFT to
      * @param score The quiz score to record
      */
-    function mint(address to, uint256 score) public onlyOwner returns (uint256) {
+    function mint(address to, uint256 score) public payable returns (uint256) {
         require(to != address(0), "Cannot mint to zero address");
         require(score > 0, "Score must be greater than 0");
+        require(msg.value >= MINT_PRICE, "Insufficient payment");
         
         _tokenIdCounter++;
         uint256 tokenId = _tokenIdCounter;
@@ -56,9 +58,23 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
         // Set the token URI with generated metadata
         _setTokenURI(tokenId, generateTokenURI(tokenId, score));
         
+        // Refund excess payment if any
+        if (msg.value > MINT_PRICE) {
+            payable(msg.sender).transfer(msg.value - MINT_PRICE);
+        }
+        
         emit ScoreNFTMinted(to, tokenId, score);
         
         return tokenId;
+    }
+
+    /**
+     * @dev Withdraw contract balance to owner
+     */
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+        payable(owner()).transfer(balance);
     }
 
     /**
