@@ -65,9 +65,8 @@ export default function Home() {
       if (isOnCelo) {
         // Verify by fetching a block from CELO network
         try {
-          const block = await celoClient.getBlock({
-            blockNumber: 'latest',
-          });
+          // Fix: Remove the blockNumber parameter to get the latest block
+          const block = await celoClient.getBlock();
           console.log('CELO network verified, latest block:', block.number);
         } catch (blockError) {
           console.warn('Could not verify CELO network by fetching block:', blockError);
