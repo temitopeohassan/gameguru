@@ -177,7 +177,6 @@ const mintNFT = async () => {
       metadata: metadata
     });
     console.log("Value (in wei):", BigInt("1000000000000000")); // 0.001 CELO
-    console.log("Gas limit:", BigInt("5000000"));
 
     writeContract({
       address: NFT_CONTRACT_ADDRESS,
@@ -185,7 +184,6 @@ const mintNFT = async () => {
       functionName: 'mint',
       args: [address, BigInt(score), metadata],
       value: BigInt("100000000000000"), // 0.0001 CELO in wei
-      gas: BigInt("50000000000000"), // Set a reasonable gas limit
     });
 
     console.log("=== Transaction Initiated ===");
