@@ -15,7 +15,7 @@ const CELO_CHAIN_ID = 42220;
 const CELO_CHAIN = celo;
 
 // NFT Contract configuration on CELO
-const NFT_CONTRACT_ADDRESS = "0x6D8B3E655519a31F80cc90bbA06c0ad9a97BAf69";
+const NFT_CONTRACT_ADDRESS = "0x5E04D7a58F0bBFC119ffFA628661Dc1c7580240a";
 const NFT_ABI = parseAbi([
   'function mint(address to, uint256 score, string memory metadata) public payable returns (uint256)',
   'function ownerOf(uint256 tokenId) view returns (address)',

@@ -25,6 +25,8 @@ polygon = "${POLYGON_RPC_URL}"
 mumbai = "${MUMBAI_RPC_URL}"
 arbitrum = "${ARBITRUM_RPC_URL}"
 optimism = "${OPTIMISM_RPC_URL}"
+celo = "${CELO_RPC_URL}"
+alfajores = "${ALFAJORES_RPC_URL}"
 
 # Etherscan API keys for verification
 [etherscan]
@@ -34,7 +36,8 @@ polygon = { key = "${POLYGONSCAN_API_KEY}" }
 mumbai = { key = "${POLYGONSCAN_API_KEY}" }
 arbitrum = { key = "${ARBISCAN_API_KEY}" }
 optimism = { key = "${OPTIMISTIC_ETHERSCAN_API_KEY}" }
-celo = { key = "${CELOSCAN_API_KEY}", url = "https://api.celoscan.io/api" }
+celo = { key = "${CELOSCAN_API_KEY}" }
+alfajores = { key = "${CELOSCAN_API_KEY}" }
 
 # Gas settings
 [profile.default.optimizer_details]
@@ -43,3 +46,5 @@ yul = true
 
 [profile.default.optimizer_details.yulDetails]
 stackAllocation = true
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

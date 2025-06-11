@@ -7,11 +7,16 @@ import "openzeppelin-contracts/contracts/access/Ownable.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "openzeppelin-contracts/contracts/utils/Base64.sol";
 
+/**
+ * @title FootballQuizNFT
+ * @dev NFT contract for Football Quiz achievements on Celo blockchain
+ * All transactions are conducted in CELO (native token)
+ */
 contract FootballQuizNFT is ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     uint256 private _tokenIdCounter;
-    uint256 public constant MINT_PRICE = 0.0001 ether; // 0.5 CELO
+    uint256 public constant MINT_PRICE = 0.0001 ether; // 0.0001 CELO (note: ether keyword represents 18 decimals, same as CELO)
     
     // Mapping from token ID to quiz score
     mapping(uint256 => uint256) public tokenScores;
@@ -23,7 +28,8 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
     mapping(address => uint256) public highestScores;
     
     // Events
-    event ScoreNFTMinted(address indexed to, uint256 indexed tokenId, uint256 score);
+    event ScoreNFTMinted(address indexed to, uint256 indexed tokenId, uint256 score, uint256 celoAmount);
+    event CELOWithdrawn(address indexed owner, uint256 amount);
     
     constructor(address initialOwner) 
         ERC721("Football Quiz Achievement", "FQA") 
@@ -34,11 +40,12 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
      * @dev Mint an NFT with the user's quiz score
      * @param to Address to mint the NFT to
      * @param score The quiz score to record
+     * @notice Requires payment in CELO (native Celo token)
      */
     function mint(address to, uint256 score) public payable returns (uint256) {
         require(to != address(0), "Cannot mint to zero address");
         require(score > 0, "Score must be greater than 0");
-        require(msg.value >= MINT_PRICE, "Insufficient payment");
+        require(msg.value >= MINT_PRICE, "Insufficient CELO payment");
         
         _tokenIdCounter++;
         uint256 tokenId = _tokenIdCounter;
@@ -58,23 +65,42 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
         // Set the token URI with generated metadata
         _setTokenURI(tokenId, generateTokenURI(tokenId, score));
         
-        // Refund excess payment if any
+        // Refund excess CELO payment if any
         if (msg.value > MINT_PRICE) {
             payable(msg.sender).transfer(msg.value - MINT_PRICE);
         }
         
-        emit ScoreNFTMinted(to, tokenId, score);
+        emit ScoreNFTMinted(to, tokenId, score, MINT_PRICE);
         
         return tokenId;
     }
 
     /**
-     * @dev Withdraw contract balance to owner
+     * @dev Withdraw contract CELO balance to owner
+     * @notice Withdraws all CELO held by the contract
      */
     function withdraw() public onlyOwner {
         uint256 balance = address(this).balance;
-        require(balance > 0, "No funds to withdraw");
+        require(balance > 0, "No CELO funds to withdraw");
         payable(owner()).transfer(balance);
+        
+        emit CELOWithdrawn(owner(), balance);
+    }
+
+    /**
+     * @dev Get the current CELO balance of the contract
+     * @return The contract's CELO balance in wei
+     */
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    /**
+     * @dev Get mint price in CELO
+     * @return The mint price in CELO (in wei units)
+     */
+    function getMintPriceInCELO() public pure returns (uint256) {
+        return MINT_PRICE;
     }
 
     /**
@@ -122,6 +148,7 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
             '<text x="200" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="', textColor, '">', message, '</text>',
             '<text x="200" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="', textColor, '">Football Quiz</text>',
             '<text x="200" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="', textColor, '">Achievement NFT</text>',
+            '<text x="200" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="', textColor, '">Powered by CELO</text>',
             '</svg>'
         ));
     }
@@ -147,7 +174,7 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
         string memory json = string(abi.encodePacked(
             '{',
             '"name": "Football Quiz Achievement #', tokenId.toString(), '",',
-            '"description": "This NFT represents a football quiz achievement with a score of ', score.toString(), ' correct answers in a row. Minted on ', block.timestamp.toString(), '.",',
+            '"description": "This NFT represents a football quiz achievement with a score of ', score.toString(), ' correct answers in a row. Minted on Celo blockchain with CELO payment on ', block.timestamp.toString(), '.",',
             '"image": "', imageURI, '",',
             '"attributes": [',
                 '{',
@@ -161,6 +188,14 @@ contract FootballQuizNFT is ERC721URIStorage, Ownable {
                 '{',
                     '"trait_type": "Game Type",',
                     '"value": "Football Quiz"',
+                '},',
+                '{',
+                    '"trait_type": "Blockchain",',
+                    '"value": "Celo"',
+                '},',
+                '{',
+                    '"trait_type": "Payment Token",',
+                    '"value": "CELO"',
                 '},',
                 '{',
                     '"trait_type": "Mint Timestamp",',
