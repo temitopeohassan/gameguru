@@ -8,15 +8,26 @@ import { API_BASE_URL } from '../config';
 import { useWriteContract, useWaitForTransactionReceipt, useAccount, useBalance } from 'wagmi';
 import { useTheme } from 'next-themes';
 import { parseAbi } from 'viem';
-import { getBalance } from '@wagmi/core';
+import { celo } from 'wagmi/chains';
 
-// NFT Contract configuration
+// CELO Chain Configuration
+const CELO_CHAIN_ID = 42220;
+const CELO_CHAIN = celo;
+
+// NFT Contract configuration on CELO
 const NFT_CONTRACT_ADDRESS = "0x6D8B3E655519a31F80cc90bbA06c0ad9a97BAf69";
 const NFT_ABI = parseAbi([
   'function mint(address to, uint256 score, string memory metadata) public payable returns (uint256)',
   'function ownerOf(uint256 tokenId) view returns (address)',
   'function tokenURI(uint256 tokenId) view returns (string)'
 ]);
+
+// CELO token constants
+const CELO_DECIMALS = 18;
+const MINT_PRICE_CELO = "0.001"; // 0.001 CELO
+const MIN_BALANCE_CELO = "0.01"; // Minimum balance required
+const MINT_PRICE_WEI = BigInt(parseFloat(MINT_PRICE_CELO) * Math.pow(10, CELO_DECIMALS));
+const MIN_BALANCE_WEI = BigInt(parseFloat(MIN_BALANCE_CELO) * Math.pow(10, CELO_DECIMALS));
 
 type Question = {
   id: number;
@@ -42,8 +53,8 @@ export function Football() {
   const [mintingComplete, setMintingComplete] = useState(false);
   const [tokenId, setTokenId] = useState<number | null>(null);
 
-  // Wagmi hooks
-  const { address } = useAccount();
+  // Wagmi hooks configured for CELO
+  const { address, chain } = useAccount();
   const { 
     data: hash, 
     writeContract, 
@@ -57,27 +68,23 @@ export function Football() {
     error: confirmError 
   } = useWaitForTransactionReceipt({ 
     hash,
+    chainId: CELO_CHAIN_ID
   });
 
-  const { data: balance } = useBalance({
+  // CELO balance hook
+  const { data: celoBalance, refetch: refetchBalance } = useBalance({
     address,
-    chainId: 42220
+    chainId: CELO_CHAIN_ID
   });
 
   // Enhanced theme detection
   const getCurrentTheme = () => {
-    if (!mounted) return 'light'; // Default to light during SSR
+    if (!mounted) return 'light';
     
-    // Use resolvedTheme first (accounts for system preference)
     if (resolvedTheme) return resolvedTheme;
-    
-    // Fallback to theme setting
     if (theme && theme !== 'system') return theme;
-    
-    // Fallback to system theme
     if (systemTheme) return systemTheme;
     
-    // Final fallback: detect from system directly
     if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
@@ -88,15 +95,13 @@ export function Football() {
   const currentTheme = getCurrentTheme();
   const isDarkMode = currentTheme === 'dark';
 
-  // Handle theme mounting with enhanced detection
+  // Handle theme mounting
   useEffect(() => {
     setMounted(true);
     
-    // Listen for system theme changes
     if (typeof window !== 'undefined') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleThemeChange = () => {
-        // Force re-render when system theme changes
         setMounted(false);
         setTimeout(() => setMounted(true), 0);
       };
@@ -115,8 +120,10 @@ export function Football() {
     if (isConfirmed && isMinting) {
       setMintingComplete(true);
       setIsMinting(false);
+      // Refetch balance after successful mint
+      refetchBalance();
     }
-  }, [isConfirmed, isMinting]);
+  }, [isConfirmed, isMinting, refetchBalance]);
 
   const fetchQuestions = async () => {
     try {
@@ -139,9 +146,31 @@ export function Football() {
     }
   };
 
+  // Check if user is on CELO network
+  const isOnCeloNetwork = () => {
+    return chain?.id === CELO_CHAIN_ID;
+  };
+
+  // Format CELO balance for display
+  const formatCeloBalance = (balance: bigint | undefined) => {
+    if (!balance) return "0";
+    const balanceInCelo = Number(balance) / Math.pow(10, CELO_DECIMALS);
+    return balanceInCelo.toFixed(4);
+  };
+
   const mintNFT = async () => {
     if (!address) {
       setError("Please connect your wallet to mint NFT");
+      return;
+    }
+
+    if (!isOnCeloNetwork()) {
+      setError("Please switch to CELO network to mint NFT");
+      return;
+    }
+
+    if (!celoBalance?.value || celoBalance.value < MIN_BALANCE_WEI) {
+      setError(`Insufficient CELO balance. You need at least ${MIN_BALANCE_CELO} CELO. Current balance: ${formatCeloBalance(celoBalance?.value)} CELO`);
       return;
     }
 
@@ -149,22 +178,18 @@ export function Football() {
       setIsMinting(true);
       setError(null);
 
-      // Check balance before proceeding
-      if (!balance?.value || balance.value < BigInt("100000000000000")) {
-        setError("Insufficient CELO balance. Please fund your wallet.");
-        setIsMinting(false);
-        return;
-      }
-
-      console.log("=== NFT Minting Details ===");
+      console.log("=== CELO NFT Minting Details ===");
+      console.log("Network: CELO Mainnet (Chain ID: 42220)");
       console.log("Wallet address:", address);
       console.log("Contract address:", NFT_CONTRACT_ADDRESS);
       console.log("Score:", score);
-      console.log("Current balance:", balance?.value.toString());
+      console.log("CELO Balance:", formatCeloBalance(celoBalance?.value), "CELO");
+      console.log("Mint Price:", MINT_PRICE_CELO, "CELO");
+      console.log("Mint Price (Wei):", MINT_PRICE_WEI.toString());
 
       const metadata = JSON.stringify({
         name: `Football Quiz Score: ${score}`,
-        description: `You scored ${score} correct answers in a row!`,
+        description: `You scored ${score} correct answers in a row on CELO network!`,
         image: "", // Add your NFT image URL here
         attributes: [
           {
@@ -174,6 +199,10 @@ export function Football() {
           {
             trait_type: "Game",
             value: "Football Quiz"
+          },
+          {
+            trait_type: "Network",
+            value: "CELO"
           },
           {
             trait_type: "Date",
@@ -189,92 +218,50 @@ export function Football() {
         score: BigInt(score),
         metadata: metadata
       });
-      console.log("Value (in wei):", BigInt("1000000000000000")); // 0.001 CELO
+      console.log("Value (CELO):", MINT_PRICE_CELO);
+      console.log("Value (Wei):", MINT_PRICE_WEI.toString());
 
-      writeContract({
+      await writeContract({
         address: NFT_CONTRACT_ADDRESS,
         abi: NFT_ABI,
         functionName: 'mint',
         args: [address, BigInt(score), metadata],
-        value: BigInt("100000000000000"), // 0.0001 CELO in wei
+        value: MINT_PRICE_WEI,
+        chainId: CELO_CHAIN_ID,
       });
 
-      console.log("=== Transaction Initiated ===");
-      console.log("Waiting for transaction confirmation...");
+      console.log("=== CELO Transaction Initiated ===");
+      console.log("Waiting for transaction confirmation on CELO network...");
 
     } catch (err) {
-      console.error('=== NFT Minting Error ===');
+      console.error('=== CELO NFT Minting Error ===');
       console.error('Error details:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error message:', errorMessage);
-      setError(`Failed to mint NFT: ${errorMessage}`);
+      setError(`Failed to mint NFT on CELO: ${errorMessage}`);
       setIsMinting(false);
     }
   };
 
-  // Alternative version with lower mint fee to test
-  const mintNFTWithLowerFee = async () => {
-    if (!address) {
-      setError("Please connect your wallet to mint NFT");
-      return;
-    }
-
-    try {
-      setIsMinting(true);
-      setError(null);
-
-      const metadata = JSON.stringify({
-        name: `Football Quiz Score: ${score}`,
-        description: `You scored ${score} correct answers in a row!`,
-        image: "",
-        attributes: [
-          {
-            trait_type: "Score",
-            value: score
-          },
-          {
-            trait_type: "Game",
-            value: "Football Quiz"
-          },
-          {
-            trait_type: "Date",
-            value: new Date().toISOString()
-          }
-        ]
-      });
-
-      // Try with a much lower value first to test if it's a value issue
-      writeContract({
-        address: NFT_CONTRACT_ADDRESS,
-        abi: NFT_ABI,
-        functionName: 'mint',
-        args: [address, BigInt(score), metadata],
-        value: BigInt("1000000000000000"), // 0.001 CELO in wei (much lower)
-        gas: BigInt("500000"),
-      });
-
-    } catch (err) {
-      console.error('Error minting NFT:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Failed to mint NFT: ${errorMessage}`);
-      setIsMinting(false);
-    }
-  };
-
-  // Version without payment to test if the contract requires payment
+  // Alternative mint function with free minting (no CELO payment)
   const mintNFTFree = async () => {
     if (!address) {
       setError("Please connect your wallet to mint NFT");
       return;
     }
 
+    if (!isOnCeloNetwork()) {
+      setError("Please switch to CELO network to mint NFT");
+      return;
+    }
+
     try {
       setIsMinting(true);
       setError(null);
 
       const metadata = JSON.stringify({
         name: `Football Quiz Score: ${score}`,
-        description: `You scored ${score} correct answers in a row!`,
+        description: `You scored ${score} correct answers in a row on CELO network!`,
         image: "",
         attributes: [
           {
@@ -286,26 +273,32 @@ export function Football() {
             value: "Football Quiz"
           },
           {
+            trait_type: "Network",
+            value: "CELO"
+          },
+          {
             trait_type: "Date",
             value: new Date().toISOString()
           }
         ]
       });
 
-      // Try without sending CELO to see if the contract is free
-      writeContract({
+      console.log("=== Free CELO NFT Minting ===");
+      console.log("Attempting free mint on CELO network...");
+
+      await writeContract({
         address: NFT_CONTRACT_ADDRESS,
         abi: NFT_ABI,
         functionName: 'mint',
         args: [address, BigInt(score), metadata],
-        // Remove the value parameter entirely
+        chainId: CELO_CHAIN_ID,
         gas: BigInt("500000"),
       });
 
     } catch (err) {
-      console.error('Error minting NFT:', err);
+      console.error('Error minting free NFT on CELO:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      setError(`Failed to mint NFT: ${errorMessage}`);
+      setError(`Failed to mint NFT on CELO: ${errorMessage}`);
       setIsMinting(false);
     }
   };
@@ -373,7 +366,7 @@ export function Football() {
     }
   };
 
-  // Enhanced loading screen with theme-aware styling
+  // Enhanced loading screen
   if (!mounted) {
     return (
       <div className="flex items-center justify-center min-h-[400px] bg-white dark:bg-gray-900 transition-colors duration-200">
@@ -451,15 +444,46 @@ export function Football() {
                     : "Keep practicing to improve your knowledge!"}
             </p>
 
-            {/* Mint NFT Button */}
-            {!isMinting && !mintingComplete && (
-              <Button 
-                onClick={mintNFT}
-                className="mt-4"
-                disabled={!address}
-              >
-                {address ? 'Mint Your Score as NFT' : 'Connect Wallet to Mint NFT'}
-              </Button>
+            {/* Network Status */}
+            {address && (
+              <div className={`p-3 rounded-lg text-sm transition-colors duration-200 ${
+                isOnCeloNetwork()
+                  ? isDarkMode
+                    ? 'bg-green-900/20 border border-green-800 text-green-300'
+                    : 'bg-green-50 border border-green-200 text-green-700'
+                  : isDarkMode
+                    ? 'bg-orange-900/20 border border-orange-800 text-orange-300'
+                    : 'bg-orange-50 border border-orange-200 text-orange-700'
+              }`}>
+                {isOnCeloNetwork() 
+                  ? `✅ Connected to CELO Network | Balance: ${formatCeloBalance(celoBalance?.value)} CELO`
+                  : '⚠️ Please switch to CELO network to mint NFT'
+                }
+              </div>
+            )}
+
+            {/* Mint NFT Buttons */}
+            {!isMinting && !mintingComplete && isOnCeloNetwork() && (
+              <div className="space-y-2">
+                <Button 
+                  onClick={mintNFT}
+                  className="w-full"
+                  disabled={!address || !celoBalance?.value || celoBalance.value < MIN_BALANCE_WEI}
+                >
+                  {address 
+                    ? `Mint NFT for ${MINT_PRICE_CELO} CELO`
+                    : 'Connect Wallet to Mint NFT'
+                  }
+                </Button>
+                <Button 
+                  onClick={mintNFTFree}
+                  variant="outline"
+                  className="w-full"
+                  disabled={!address}
+                >
+                  Try Free Mint
+                </Button>
+              </div>
             )}
 
             {/* Minting in Progress */}
@@ -475,7 +499,7 @@ export function Football() {
                     <span className={`transition-colors duration-200 ${
                       isDarkMode ? 'text-yellow-300' : 'text-yellow-700'
                     }`}>
-                      {isConfirming ? 'Confirming transaction...' : 'Minting your NFT...'}
+                      {isConfirming ? 'Confirming on CELO network...' : 'Minting your NFT on CELO...'}
                     </span>
                   </div>
                 </div>
@@ -493,19 +517,31 @@ export function Football() {
                   <h3 className={`font-semibold transition-colors duration-200 ${
                     isDarkMode ? 'text-green-200' : 'text-green-800'
                   }`}>
-                    🎉 NFT Minted Successfully!
+                    🎉 NFT Minted Successfully on CELO!
                   </h3>
                   <p className={`text-sm mt-1 transition-colors duration-200 ${
                     isDarkMode ? 'text-green-300' : 'text-green-600'
                   }`}>
-                    Your football quiz score has been immortalized as an NFT
+                    Your football quiz score has been immortalized as an NFT on the CELO blockchain
                   </p>
                   {hash && (
-                    <p className={`text-xs mt-2 break-all transition-colors duration-200 ${
-                      isDarkMode ? 'text-green-400' : 'text-green-500'
-                    }`}>
-                      Transaction: {hash}
-                    </p>
+                    <div className="mt-2">
+                      <p className={`text-xs break-all transition-colors duration-200 ${
+                        isDarkMode ? 'text-green-400' : 'text-green-500'
+                      }`}>
+                        Transaction: {hash}
+                      </p>
+                      <a 
+                        href={`https://explorer.celo.org/mainnet/tx/${hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`text-xs underline transition-colors duration-200 ${
+                          isDarkMode ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-500'
+                        }`}
+                      >
+                        View on CELO Explorer
+                      </a>
+                    </div>
                   )}
                 </div>
               </div>
@@ -521,7 +557,7 @@ export function Football() {
                 <p className={`text-sm transition-colors duration-200 ${
                   isDarkMode ? 'text-orange-300' : 'text-orange-700'
                 }`}>
-                  Connect your wallet to mint your score as an NFT
+                  Connect your wallet and switch to CELO network to mint your score as an NFT
                 </p>
               </div>
             )}
